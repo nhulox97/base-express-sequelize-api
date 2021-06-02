@@ -11,7 +11,9 @@ const publicDir = path.join(__dirname, '../public/uploads');
 app.use(express.static(publicDir));
 
 // Parsing request and response to json format
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+// accep urlencoded body
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // this middleware will be executed for every request to the app
 app.use(function (_, res, next) {
@@ -23,7 +25,10 @@ app.use(function (_, res, next) {
 app.use(function (_, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
