@@ -47,6 +47,7 @@ exports.getUsers = (req, res) => {
  */
 exports.signInUser = (req, res) => {
     const user = req.body;
+    console.log(user);
     // Verificar que el objeto contenga al menos una propiedad.
     // Sequelize se encargará de verificar que la propiedad del objeto
     // user sean las correctas
@@ -62,7 +63,7 @@ exports.signInUser = (req, res) => {
         .then((nUser) => {
             const token = generateToken(nUser);
             return successRequestResponse(res, {
-                user: nUser,
+                users: nUser,
                 token,
                 msg: 'User was successfully created'
             });
@@ -82,7 +83,7 @@ exports.signInUser = (req, res) => {
  */
 exports.loginUser = (req, res) => {
     const { user_username, user_password } = req.body;
-    console.log(user_username);
+    console.log(req.body);
     // Verificar que el objeto contenga al menos una propiedad.
     // Sequelize se encargara de verificar que las propiedad del objeto
     // user sean las correctas
@@ -101,6 +102,7 @@ exports.loginUser = (req, res) => {
     })
         .then((lUser) => {
             // Verificar si el usuario fue encontrado en la base de datos
+            console.log('here');
             if (!lUser) return notFoundRequestResponse(res, 'User');
 
             // Verificar si las password enviada es la correcta
@@ -122,7 +124,7 @@ exports.loginUser = (req, res) => {
                     // Verificar si el token no fue requerido
                     const { isTokenRequired } = req.body;
                     if (!isTokenRequired)
-                        return successRequestResponse(res, lUser);
+                        return successRequestResponse(res, { users: lUser });
 
                     // Si el token fue requerido, solicitarlo.
                     const token = generateToken(lUser);
@@ -179,7 +181,7 @@ exports.updateUser = (req, res) => {
             // Si el usuario se actualizo, entonces devolver el objeto del usuario
             // actualizado
             Models.User.findByPk(user_id).then((updatedUser) =>
-                successRequestResponse(res, { user: updatedUser })
+                successRequestResponse(res, { users: updatedUser })
             );
         })
         .catch((error) => {
